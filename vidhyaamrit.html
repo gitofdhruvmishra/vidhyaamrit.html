@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>vidhyaamrit.official</title>
+
+<style>
+
+body{
+font-family:Arial;
+text-align:center;
+background-image:url("background.jpg");
+background-size:cover;
+background-repeat:no-repeat;
+background-position:center;
+}
+
+.menu-btn{
+font-size:30px;
+cursor:pointer;
+position:absolute;
+top:20px;
+right:30px;
+}
+
+.menu{
+display:none;
+position:absolute;
+top:60px;
+right:30px;
+background:white;
+border:1px solid gray;
+padding:10px;
+}
+
+.menu a{
+display:block;
+text-decoration:none;
+color:black;
+padding:8px;
+}
+
+.menu a:hover{
+background:#eee;
+}
+
+.box{
+display:none;
+margin-top:30px;
+background:rgba(255,255,255,0.9);
+padding:20px;
+width:330px;
+margin-left:auto;
+margin-right:auto;
+border-radius:10px;
+}
+
+.home-box{
+display:none;
+margin-top:30px;
+}
+
+.product{
+background:rgba(255,255,255,0.9);
+padding:15px;
+margin:10px auto;
+width:250px;
+border-radius:10px;
+}
+
+.buy-btn{
+padding:8px 15px;
+border:none;
+background:green;
+color:white;
+cursor:pointer;
+border-radius:5px;
+}
+
+.logout-btn{
+padding:8px 15px;
+border:none;
+background:red;
+color:white;
+cursor:pointer;
+border-radius:5px;
+}
+
+.back-btn{
+margin-top:10px;
+padding:8px 15px;
+border:none;
+background:black;
+color:white;
+cursor:pointer;
+border-radius:5px;
+}
+
+input,textarea,select{
+margin:8px;
+padding:6px;
+width:85%;
+}
+
+</style>
+
+<!-- EMAILJS -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<script>
+
+(function(){
+emailjs.init("YOUR_PUBLIC_KEY");
+})();
+
+let selectedProduct="";
+
+function toggleMenu(){
+var menu=document.getElementById("menu");
+menu.style.display=(menu.style.display==="block")?"none":"block";
+}
+
+function hideAll(){
+document.getElementById("home").style.display="none";
+document.getElementById("contact").style.display="none";
+document.getElementById("settings").style.display="none";
+document.getElementById("order").style.display="none";
+}
+
+function showHome(){
+hideAll();
+document.getElementById("home").style.display="block";
+}
+
+function showContact(){
+hideAll();
+document.getElementById("contact").style.display="block";
+}
+
+function showSettings(){
+hideAll();
+document.getElementById("settings").style.display="block";
+}
+
+function buyProduct(product){
+hideAll();
+selectedProduct=product;
+document.getElementById("productName").innerText=product;
+document.getElementById("order").style.display="block";
+}
+
+function checkSticker(){
+var sticker=document.getElementById("stickerType").value;
+
+if(sticker=="Customized Sticker"){
+document.getElementById("customSticker").style.display="block";
+}
+else{
+document.getElementById("customSticker").style.display="none";
+}
+}
+
+function placeOrder(){
+
+var qty=document.getElementById("qty").value;
+var address=document.getElementById("address").value;
+var sticker=document.getElementById("stickerType").value;
+var customSticker=document.getElementById("customSticker").value;
+
+if(qty==""||address==""){
+alert("Please fill all details");
+return;
+}
+
+var templateParams={
+product:selectedProduct,
+quantity:qty,
+stickerType:sticker,
+stickerDetail:customSticker,
+address:address
+};
+
+emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",templateParams)
+.then(function(response){
+alert("Order Sent Successfully!");
+showHome();
+},
+function(error){
+alert("Failed to send order");
+});
+
+}
+
+function goBack(){
+hideAll();
+showHome();
+}
+
+window.onload=function(){
+showHome();
+}
+
+</script>
+
+</head>
+
+<body>
+
+<div class="menu-btn" onclick="toggleMenu()">⋮</div>
+
+<div id="menu" class="menu">
+<a href="#" onclick="showHome()">Home</a>
+<a href="#">About</a>
+<a href="#" onclick="showContact()">Contact</a>
+<a href="#">Address</a>
+<a href="#" onclick="showSettings()">Settings</a>
+</div>
+
+<h1>VIDHYA AMRIT</h1>
+<p>OFFICIAL PAGE</p>
+
+<div id="home" class="home-box">
+
+<div class="product">
+<h3>Mineral Water Bottle</h3>
+<p>Price: ₹20</p>
+<button class="buy-btn" onclick="buyProduct('Mineral Water Bottle')">Buy Now</button>
+</div>
+
+<div class="product">
+<h3>1L Water Bottle</h3>
+<p>Price: ₹40</p>
+<button class="buy-btn" onclick="buyProduct('1L Water Bottle')">Buy Now</button>
+</div>
+
+<div class="product">
+<h3>20L Water Jar</h3>
+<p>Price: ₹120</p>
+<button class="buy-btn" onclick="buyProduct('20L Water Jar')">Buy Now</button>
+</div>
+
+</div>
+
+<div id="order" class="box">
+
+<h3>Order Product</h3>
+
+<p id="productName"></p>
+
+<input type="number" id="qty" placeholder="Number of Bottles">
+
+<select id="stickerType" onchange="checkSticker()">
+<option value="Company Sticker">Company Sticker</option>
+<option value="Customized Sticker">Customized Sticker</option>
+</select>
+
+<input type="text" id="customSticker" placeholder="Enter Sticker Text / Design" style="display:none;">
+
+<textarea id="address" placeholder="Enter Delivery Address"></textarea>
+
+<br>
+
+<button class="buy-btn" onclick="placeOrder()">Send Order</button>
+
+<br><br>
+
+<button class="back-btn" onclick="goBack()">Back</button>
+
+</div>
+
+<div id="contact" class="box">
+<h3>Contact Details</h3>
+<p>Phone: +91 6232561415</p>
+<p>Email: dm2101573@gmail.com</p>
+<p>Instagram: @vidhyaamrit.official</p>
+
+<button class="back-btn" onclick="goBack()">Back</button>
+</div>
+
+<div id="settings" class="box">
+<h3>Profile</h3>
+<p>Name: Dhruv Mishra</p>
+<p>Email: dm2101573@gmail.com</p>
+<button class="logout-btn" onclick="location.reload()">Logout</button>
+
+<br><br>
+
+<button class="back-btn" onclick="goBack()">Back</button>
+
+</div>
+
+</body>
+</html>
